@@ -1,8 +1,14 @@
 'use client'
 
+import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import api from '@/apis'
 
 interface Post {
@@ -42,48 +48,52 @@ export default function PostsPage() {
   }
 
   return (
-    <div className="tw:max-w-3xl tw:mx-auto tw:px-4 tw:py-8 tw:space-y-6">
-      <h1 className="tw:text-3xl tw:font-bold">Posts</h1>
+    <div className="mx-auto max-w-3xl space-y-6 px-4 py-8">
+      <h1 className="text-3xl font-bold tracking-tight">Posts</h1>
 
-      <form
-        onSubmit={createPost}
-        className="tw:card tw:bg-base-100 tw:shadow-sm tw:p-4 tw:space-y-2"
-      >
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Post title"
-          className="tw:input tw:input-bordered tw:w-full"
-          required
-        />
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="What's on your mind?"
-          className="tw:textarea tw:textarea-bordered tw:w-full"
-          rows={3}
-          required
-        />
-        <button className="tw:btn tw:btn-primary tw:self-end" type="submit">
-          Publish
-        </button>
-      </form>
+      <Card>
+        <CardContent>
+          <form onSubmit={createPost} className="flex flex-col gap-2">
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Post title"
+              required
+            />
+            <Textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="What's on your mind?"
+              rows={3}
+              required
+            />
+            <Button type="submit" className="self-end">
+              Publish
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
-      {loading && <span className="tw:loading tw:loading-spinner" />}
-      {!loading && posts.length === 0 && <p>No posts yet.</p>}
+      {loading && (
+        <div className="flex justify-center py-8">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </div>
+      )}
+      {!loading && posts.length === 0 && <p className="text-muted-foreground">No posts yet.</p>}
 
-      <div className="tw:space-y-3">
+      <div className="space-y-3">
         {posts.map((post) => (
-          <Link
-            key={post.id}
-            href={`/posts/${post.id}`}
-            className="tw:card tw:bg-base-100 tw:shadow-sm tw:p-4 tw:block hover:tw:shadow-md"
-          >
-            <h2 className="tw:font-semibold tw:text-lg">{post.title}</h2>
-            <p className="tw:text-sm tw:opacity-70 tw:line-clamp-2">{post.content}</p>
-            <p className="tw:text-xs tw:opacity-60 tw:mt-2">
-              {post.user?.username} · {post.comments?.length ?? 0} comments
-            </p>
+          <Link key={post.id} href={`/posts/${post.id}`} className="block">
+            <Card className="transition-colors hover:bg-muted/50">
+              <CardHeader>
+                <CardTitle className="text-lg">{post.title}</CardTitle>
+                <CardDescription className="line-clamp-2">{post.content}</CardDescription>
+              </CardHeader>
+              <CardContent className="flex items-center gap-2 text-xs text-muted-foreground">
+                {post.user && <Badge variant="secondary">@{post.user.username}</Badge>}
+                <span>{post.comments?.length ?? 0} comments</span>
+              </CardContent>
+            </Card>
           </Link>
         ))}
       </div>

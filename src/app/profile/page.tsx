@@ -1,7 +1,14 @@
 'use client'
 
+import { CircleCheck, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
+import { Alert, AlertTitle } from '@/components/ui/alert'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import api from '@/apis'
 import { useAuthStore } from '@/stores/auth'
 
@@ -32,36 +39,63 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="tw:flex tw:justify-center tw:py-20">
-        <span className="tw:loading tw:loading-spinner tw:loading-lg" />
+      <div className="flex justify-center py-20">
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   return (
-    <div className="tw:max-w-xl tw:mx-auto tw:px-4 tw:py-8 tw:space-y-4">
-      <h1 className="tw:text-3xl tw:font-bold">My profile</h1>
-      <form onSubmit={save} className="tw:card tw:bg-base-100 tw:shadow-lg tw:p-6 tw:space-y-3">
-        {saved && <div className="tw:alert tw:alert-success tw:text-sm">Saved.</div>}
-        <p className="tw:text-sm tw:opacity-60">
-          @{user.username} · {user.email}
-        </p>
-        <input
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          placeholder="First name"
-          className="tw:input tw:input-bordered tw:w-full"
-        />
-        <input
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          placeholder="Last name"
-          className="tw:input tw:input-bordered tw:w-full"
-        />
-        <button className="tw:btn tw:btn-primary tw:self-end" type="submit">
-          Save
-        </button>
-      </form>
+    <div className="mx-auto max-w-xl space-y-4 px-4 py-8">
+      <h1 className="text-3xl font-bold tracking-tight">My profile</h1>
+      <Card>
+        <CardHeader className="flex flex-row items-center gap-4">
+          <Avatar className="size-16">
+            <AvatarFallback className="text-xl">
+              {(user.username?.[0] ?? 'U').toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <p className="font-medium">
+              {user.first_name} {user.last_name}
+            </p>
+            <p className="truncate text-sm text-muted-foreground">
+              @{user.username} · {user.email}
+            </p>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={save} className="space-y-4">
+            {saved && (
+              <Alert>
+                <CircleCheck />
+                <AlertTitle>Saved.</AlertTitle>
+              </Alert>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="first_name">First name</Label>
+              <Input
+                id="first_name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="First name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="last_name">Last name</Label>
+              <Input
+                id="last_name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Last name"
+              />
+            </div>
+            <div className="flex justify-end">
+              <Button type="submit">Save</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }

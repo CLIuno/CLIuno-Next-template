@@ -1,9 +1,13 @@
 'use client'
 
+import { ArrowLeft, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
+import { Badge } from '@/components/ui/badge'
+import { buttonVariants } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import api from '@/apis'
 
 interface Todo {
@@ -30,28 +34,35 @@ export default function TodoDetailPage() {
 
   if (!todo) {
     return (
-      <div className="tw:flex tw:justify-center tw:py-20">
-        <span className="tw:loading tw:loading-spinner tw:loading-lg" />
+      <div className="flex justify-center py-20">
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   return (
-    <div className="tw:max-w-2xl tw:mx-auto tw:px-4 tw:py-8 tw:space-y-4">
-      <Link href="/todos" className="tw:btn tw:btn-ghost tw:btn-sm">
-        ← Back to todos
+    <div className="mx-auto max-w-2xl space-y-4 px-4 py-8">
+      <Link href="/todos" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+        <ArrowLeft />
+        Back to todos
       </Link>
-      <div className="tw:card tw:bg-base-100 tw:shadow-lg tw:p-6 tw:space-y-2">
-        <h1 className="tw:text-2xl tw:font-bold">{todo.title}</h1>
-        {todo.description && <p className="tw:opacity-80">{todo.description}</p>}
-        <p className="tw:text-sm">
-          Status:{' '}
-          <span className={todo.is_completed ? 'tw:text-success' : 'tw:text-warning'}>
-            {todo.is_completed ? 'Completed' : 'Open'}
-          </span>
-        </p>
-        {todo.user && <p className="tw:text-sm tw:opacity-60">Owner: {todo.user.username}</p>}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">{todo.title}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {todo.description && <p className="text-muted-foreground">{todo.description}</p>}
+          <div className="flex items-center gap-2 text-sm">
+            <span>Status:</span>
+            <Badge variant={todo.is_completed ? 'default' : 'secondary'}>
+              {todo.is_completed ? 'Completed' : 'Open'}
+            </Badge>
+          </div>
+          {todo.user && (
+            <p className="text-sm text-muted-foreground">Owner: {todo.user.username}</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

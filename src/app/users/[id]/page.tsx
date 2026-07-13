@@ -1,8 +1,13 @@
 'use client'
 
+import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import api from '@/apis'
 import { useAuthStore, type User } from '@/stores/auth'
 
@@ -42,8 +47,8 @@ export default function UserProfilePage() {
 
   if (!user) {
     return (
-      <div className="tw:flex tw:justify-center tw:py-20">
-        <span className="tw:loading tw:loading-spinner tw:loading-lg" />
+      <div className="flex justify-center py-20">
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -51,43 +56,42 @@ export default function UserProfilePage() {
   const isMe = me && String(me.id) === String(user.id)
 
   return (
-    <div className="tw:max-w-2xl tw:mx-auto tw:px-4 tw:py-8 tw:space-y-4">
-      <div className="tw:card tw:bg-base-100 tw:shadow-lg tw:p-6 tw:flex-row tw:items-center tw:gap-4">
-        <div className="tw:avatar tw:placeholder">
-          <div className="tw:bg-neutral tw:text-neutral-content tw:w-16 tw:rounded-full">
-            <span className="tw:text-xl">{user.first_name?.[0]}</span>
-          </div>
-        </div>
-        <div className="tw:flex-1">
-          <h1 className="tw:text-xl tw:font-bold">
+    <div className="mx-auto max-w-2xl space-y-4 px-4 py-8">
+      <Card className="flex-row items-center gap-4 px-6 py-6">
+        <Avatar className="size-16">
+          <AvatarFallback className="text-xl">
+            {(user.first_name?.[0] ?? 'U').toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl font-bold tracking-tight">
             {user.first_name} {user.last_name}
           </h1>
-          <p className="tw:opacity-60">@{user.username}</p>
-          <p className="tw:text-sm tw:mt-1">
+          <p className="text-muted-foreground">@{user.username}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
             {followers.length} followers · {following.length} following
           </p>
         </div>
         {!isMe && (
-          <button
-            onClick={toggleFollow}
-            className={`tw:btn ${isFollowing ? 'tw:btn-outline' : 'tw:btn-primary'}`}
-          >
+          <Button onClick={toggleFollow} variant={isFollowing ? 'outline' : 'default'}>
             {isFollowing ? 'Following' : 'Follow'}
-          </button>
+          </Button>
         )}
-      </div>
+      </Card>
 
       {followers.length > 0 && (
-        <div className="tw:card tw:bg-base-100 tw:shadow tw:p-4">
-          <h2 className="tw:font-bold tw:mb-2">Followers</h2>
-          <div className="tw:flex tw:flex-wrap tw:gap-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Followers</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
             {followers.map((f) => (
-              <span key={f.id} className="tw:badge tw:badge-outline">
+              <Badge key={f.id} variant="outline">
                 @{f.username}
-              </span>
+              </Badge>
             ))}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )

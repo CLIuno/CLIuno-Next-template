@@ -1,8 +1,14 @@
 'use client'
 
+import { Loader2, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import api from '@/apis'
 
 interface Todo {
@@ -52,58 +58,71 @@ export default function TodosPage() {
   }
 
   return (
-    <div className="tw:max-w-3xl tw:mx-auto tw:px-4 tw:py-8 tw:space-y-6">
-      <h1 className="tw:text-3xl tw:font-bold">Todos</h1>
+    <div className="mx-auto max-w-3xl space-y-6 px-4 py-8">
+      <h1 className="text-3xl font-bold tracking-tight">Todos</h1>
 
-      <form onSubmit={createTodo} className="tw:flex tw:gap-2">
-        <input
+      <form onSubmit={createTodo} className="flex gap-2">
+        <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="New todo title"
-          className="tw:input tw:input-bordered tw:flex-1"
+          className="flex-1"
           required
         />
-        <input
+        <Input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description (optional)"
-          className="tw:input tw:input-bordered tw:flex-1"
+          className="flex-1"
         />
-        <button className="tw:btn tw:btn-primary" type="submit">
-          Add
-        </button>
+        <Button type="submit">Add</Button>
       </form>
 
-      {loading && <span className="tw:loading tw:loading-spinner" />}
-      {!loading && todos.length === 0 && <p>No todos yet — add your first one.</p>}
+      {loading && (
+        <div className="flex justify-center py-8">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </div>
+      )}
+      {!loading && todos.length === 0 && (
+        <p className="text-muted-foreground">No todos yet — add your first one.</p>
+      )}
 
-      <ul className="tw:space-y-2">
+      <ul className="space-y-2">
         {todos.map((todo) => (
-          <li
-            key={todo.id}
-            className="tw:card tw:bg-base-100 tw:shadow-sm tw:p-4 tw:flex-row tw:items-center tw:gap-3"
-          >
-            <input
-              type="checkbox"
-              checked={todo.is_completed}
-              onChange={() => toggle(todo.id)}
-              className="tw:checkbox"
-            />
-            <div className="tw:flex-1">
-              <Link
-                href={`/todos/${todo.id}`}
-                className={todo.is_completed ? 'tw:line-through tw:opacity-60' : ''}
+          <li key={todo.id}>
+            <Card className="flex-row items-center gap-3 px-4 py-3">
+              <Checkbox
+                checked={todo.is_completed}
+                onCheckedChange={() => toggle(todo.id)}
+                aria-label={`Toggle ${todo.title}`}
+              />
+              <div className="min-w-0 flex-1">
+                <Link
+                  href={`/todos/${todo.id}`}
+                  className={cn(
+                    'font-medium hover:underline',
+                    todo.is_completed && 'text-muted-foreground line-through',
+                  )}
+                >
+                  {todo.title}
+                </Link>
+                {todo.description && (
+                  <p className="truncate text-sm text-muted-foreground">{todo.description}</p>
+                )}
+                {todo.user && (
+                  <p className="text-xs text-muted-foreground">by {todo.user.username}</p>
+                )}
+              </div>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => remove(todo.id)}
+                aria-label={`Delete ${todo.title}`}
+                className="text-muted-foreground hover:text-destructive"
               >
-                {todo.title}
-              </Link>
-              {todo.user && <p className="tw:text-xs tw:opacity-60">by {todo.user.username}</p>}
-            </div>
-            <button
-              onClick={() => remove(todo.id)}
-              className="tw:btn tw:btn-ghost tw:btn-xs tw:text-error"
-            >
-              Delete
-            </button>
+                <Trash2 />
+              </Button>
+            </Card>
           </li>
         ))}
       </ul>

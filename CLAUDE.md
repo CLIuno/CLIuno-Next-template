@@ -35,6 +35,7 @@ Keep all URLs inside `src/apis/`.
 
 ## Conventions
 
-oxc tooling (`semi: false`, single quotes); prettier for css/md/json; Tailwind v4 +
-daisyUI with `tw:` prefix (globals.css `@import 'tailwindcss' prefix(tw)`);
+oxc tooling (`semi: false`, single quotes); prettier for css/md/json; Tailwind v4 (no
+prefix) + shadcn/ui on Base UI primitives (`src/components/ui/`, `cn()` in
+`src/lib/utils.ts`, theme tokens in `src/assets/globals.css`, dark mode = `.dark` class);
 conventional commits (commitlint + husky).
