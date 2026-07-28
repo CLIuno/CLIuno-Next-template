@@ -22,6 +22,7 @@ interface Post {
   id: string | number
   title: string
   content: string
+  image_url?: string | null
   user?: { id: string | number; username: string }
   comments?: Comment[]
 }
@@ -68,6 +69,14 @@ export default function PostDetailPage() {
           <article className="space-y-3">
             <h1 className="text-2xl font-bold tracking-tight">{post.title}</h1>
             <p className="text-muted-foreground">{post.content}</p>
+            {post.image_url && (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={post.image_url}
+                alt={post.title}
+                className="mt-3 max-h-96 w-full rounded-md border object-cover"
+              />
+            )}
             {post.user && <Badge variant="secondary">@{post.user.username}</Badge>}
           </article>
 

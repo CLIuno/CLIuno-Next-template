@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import api from '@/apis'
 import type { User } from '@/stores/auth'
@@ -33,6 +33,7 @@ export default function UsersPage() {
           <Link key={user.id} href={`/users/${user.id}`} className="block">
             <Card className="flex-row items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50">
               <Avatar>
+                {user.avatar_url && <AvatarImage src={user.avatar_url} alt={user.username} />}
                 <AvatarFallback>{(user.username?.[0] ?? 'U').toUpperCase()}</AvatarFallback>
               </Avatar>
               <div className="min-w-0">

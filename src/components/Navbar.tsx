@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { buttonVariants } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -59,6 +59,7 @@ export default function Navbar() {
                 className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'rounded-full')}
               >
                 <Avatar>
+                  {user?.avatar_url && <AvatarImage src={user.avatar_url} alt={initial} />}
                   <AvatarFallback>{initial}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
