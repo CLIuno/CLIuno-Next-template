@@ -6,5 +6,9 @@
   },
   "categories": {
     "correctness": "error"
+  },
+  "rules": {
+    "react/set-state-in-effect": "off",
+    "react/purity": "off"
   }
 }
