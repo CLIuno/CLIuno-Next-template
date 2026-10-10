@@ -39,3 +39,16 @@ oxc tooling (`semi: false`, single quotes); prettier for css/md/json; Tailwind v
 prefix) + shadcn/ui on Base UI primitives (`src/components/ui/`, `cn()` in
 `src/lib/utils.ts`, theme tokens in `src/assets/globals.css`, dark mode = `.dark` class);
 conventional commits (commitlint + husky).
+
+## AI agents (Claude Code and friends)
+
+- **Check the CLIuno skills first**: `npx cliuno@latest skills status` — if any is
+  `missing`/`outdated`, run `npx cliuno@latest skills install` (adds `.claude/skills/cliuno-*`:
+  the generator workflow, the scaffold guide, and the shared REST contract).
+- **Generate resources, don't hand-write them**:
+  `npx cliuno@latest make:resource Product --fields name:string,price:number,inStock:boolean`
+  creates `src/apis/product-api.ts`, `src/app/products/page.tsx`, `src/app/products/[id]/page.tsx` and registers it in `src/apis/index.ts`, following this
+  template's conventions and the `{status, message, data}` contract. `--dry-run` previews,
+  re-running never duplicates registrations, `--force` overwrites.
+- Single pieces: `make:api`, `make:page`, `make:store`, `make:component` (→ `npx shadcn@latest add`). `npx cliuno@latest make` lists them.
+- Then edit fields/business logic only, and run the gates above.
