@@ -15,7 +15,7 @@
     "start": "next start",
     "lint": "oxlint .",
     "format": "oxfmt src/",
-    "type-check": "tsc --noEmit",
+    "type-check": "next typegen && tsc --noEmit",
     "prepare": "husky",
     "changeset": "changeset"
   },
